@@ -2,18 +2,26 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-class Square extends React.Component {
+// class Square extends React.Component {
 
-  render() {
-    return (
-      <button
-        className="square"
-        onClick={() => { this.props.onClick(); }}
-      >
-        {this.props.value}
-      </button>
-    );
-  }
+//   render() {
+//     return (
+//       <button
+//         className="square"
+//         onClick={() => { this.props.onClick(); }}
+//       >
+//         {this.props.value}
+//       </button>
+//     );
+//   }
+// }
+
+function Square(props) {
+  return (
+    <button className="square" onClick={props.onClick} >
+      {props.value}
+    </button>
+  );
 }
 
 class Board extends React.Component {
@@ -21,14 +29,25 @@ class Board extends React.Component {
     super(props);
     this.state = {
       squares: Array(9).fill(null),
+      xIsNext: true,
     };
   }
 
   handleClick(i) {
+    // Array.slice(start, end)はインデックスstartからインデックスendまでの要素を持つ配列を新しく生成する方法。
+    // したがって、以下のようにして配列全体を切り出して新しく配列を生成すればよい。
+    // var arr1 = [0, 1, 2, 3, 4];
+    // var arr2 = arr1.slice(0, arr1.length);
+    // 引数なしでも同じことができる
+    // var arr3 = arr1.slice();
+
+    // これはstate.squaresの配列をコピーしている。
     const squares = this.state.squares.slice();
-    console.log(squares);
-    squares[i] = 'X';
-    this.setState({ squares: squares });
+    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    this.setState({
+      squares: squares,
+      xIsNext: !this.state.xIsNext,
+    });
   }
 
   renderSquare(i) {
@@ -41,7 +60,7 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = 'Next player: X';
+    const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
 
     return (
       <div>
